@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PurPurPdv", "PurPurPdv\PurPurPdv.csproj", "{47D7D953-0A34-4BA7-A0C5-C2D7B76088EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibBD", "LibBD\LibBD.csproj", "{F259FB76-2A26-4864-AD5B-72EDBCE3F4A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47D7D953-0A34-4BA7-A0C5-C2D7B76088EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47D7D953-0A34-4BA7-A0C5-C2D7B76088EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47D7D953-0A34-4BA7-A0C5-C2D7B76088EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47D7D953-0A34-4BA7-A0C5-C2D7B76088EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F259FB76-2A26-4864-AD5B-72EDBCE3F4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F259FB76-2A26-4864-AD5B-72EDBCE3F4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F259FB76-2A26-4864-AD5B-72EDBCE3F4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F259FB76-2A26-4864-AD5B-72EDBCE3F4A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {938122AC-F2D9-4ACA-9CC9-0558FBA3F6F0}
+	EndGlobalSection
+EndGlobal
