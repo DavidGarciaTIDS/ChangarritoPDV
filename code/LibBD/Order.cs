@@ -2,8 +2,7 @@
 {
     public enum Order
     {
-        Acendente,
-        Decendente
-
+        ASC,
+        DESC
     }
 }

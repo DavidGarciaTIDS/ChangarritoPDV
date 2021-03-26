@@ -460,11 +460,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\David\\source\\repos\\PurPurPdv\\LibBD\\LibBD.csproj",
+      "projectUniqueName": "C:\\Users\\David\\source\\repos\\ChangarritoPDV\\code\\LibBD\\LibBD.csproj",
       "projectName": "LibBD",
-      "projectPath": "C:\\Users\\David\\source\\repos\\PurPurPdv\\LibBD\\LibBD.csproj",
+      "projectPath": "C:\\Users\\David\\source\\repos\\ChangarritoPDV\\code\\LibBD\\LibBD.csproj",
       "packagesPath": "C:\\Users\\David\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\David\\source\\repos\\PurPurPdv\\LibBD\\obj\\",
+      "outputPath": "C:\\Users\\David\\source\\repos\\ChangarritoPDV\\code\\LibBD\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

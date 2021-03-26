@@ -1,8 +1,8 @@
 ﻿namespace LibBD
 {
     /// <summary>
-    /// These are the Fieled Types most common for database table design
-    /// These are use by the program to stablish the data types in the datacollection 
+    /// These are the Field Types most common for database table design
+    /// These are use by the program to establish the data types in the data collection 
     /// for the CRUD
     /// </summary>
     public enum Types

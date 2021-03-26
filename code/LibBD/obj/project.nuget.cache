@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dEzPUMdgqKCiWZNN8/wJomdegaoL9FlvgaBJPQK2uc+zZvHIaexYzkvE01zCGUdzhhhS/OMOGz74NuGEXudBeQ==",
+  "dgSpecHash": "G7NvKh2LRezppGh4OcdQ3E2NRBTYc+MkSaZEyLrAY3dVQ4YGmN6k1Oo0849zRdX16keoANzU4cpjC+hu02h7rw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\David\\source\\repos\\PurPurPdv\\LibBD\\LibBD.csproj",
+  "projectFilePath": "C:\\Users\\David\\source\\repos\\ChangarritoPDV\\code\\LibBD\\LibBD.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\David\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",

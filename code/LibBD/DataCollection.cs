@@ -24,7 +24,7 @@ namespace LibBD
                 }
             }
 
-            set => Value = value;
+            set => this.Value = value;
             
         }
 
@@ -32,7 +32,7 @@ namespace LibBD
         //constructor
 
         /// <summary>
-        /// Creates an obect to represent any field on the database 
+        /// Creates an object to represent any field on the database 
         /// </summary>
         /// <param name="name">The name of the field in the table</param>
         /// <param name="fieldtype">Type of the value</param>
@@ -45,20 +45,20 @@ namespace LibBD
         }
 
         public bool HasQuotes() {
-        /* 
-        TINYINT,
-        INT,
-        BIGINT,
-        DOUBLE,
-        FLOAT,
-        MONEY,
-        SMALLMONEY,
-        */
+            /* 
+             VARCHAR,
+            NVARCHAR,
+            TEXT,
+            NTEXT,
+            DATE,
+            DATETIME,
+            TIME,
+            */
 
 
-            return !(this.FieldType == Types.BIGINT || this.FieldType == Types.INT ||
-                this.FieldType == Types.DOUBLE || this.FieldType == Types.FLOAT || this.FieldType == Types.MONEY ||
-                this.FieldType == Types.TINYINT || this.FieldType == Types.SMALLMONEY);
+            return (this.FieldType==Types.NVARCHAR || this.FieldType == Types.VARCHAR || this.FieldType == Types.TEXT || 
+                    this.FieldType == Types.NTEXT || this.FieldType == Types.DATE || this.FieldType == Types.DATETIME ||
+                    this.FieldType == Types.TIME );
         }
 
 
