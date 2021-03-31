@@ -30,7 +30,7 @@ namespace LibBD
             this.PASSW = pwd;
             this.PORT = port;
 
-            //
+            //we initialize the connection string for SQL
             this.connectionString = $"Server={this.SERVER},{this.PORT};Database={this.DBNAME};User Id={this.USER};Password={this.PASSW};";
             //instantiate the connection
             this.con = new SqlConnection(this.connectionString);
@@ -305,7 +305,96 @@ namespace LibBD
 
         public override List<List<Object>> Read(List<string> fields, string table1, string table2, List<string> onFields, List<SearchCollection> search)
         {
-            throw new NotImplementedException();
+
+            // returns a dynamic list of RECORDS/ROWS, each of there are List<object>
+            List<List<object>> res = new List<List<object>>();
+            try
+            {
+                //Connect
+                this.Connect();
+                //Parse the fields collections
+                string parseFields = "";
+                foreach (string col in fields)
+                {
+                    parseFields += $"{col},";
+                }
+
+                //remove last comma
+                parseFields = parseFields.Remove(parseFields.Length - 1);
+
+                //parse search collection
+                string parseWhere = "";
+
+                foreach (SearchCollection criteria in search)
+                {
+                    parseWhere += $"{criteria.Name} {criteria.ParseOperator(criteria.Operator)} {criteria.Value} {criteria.ParseLogicOperator(criteria.LogicOp)}";
+                }
+               
+                //Parse the onQuery
+                
+                //the Onstring
+                string onInnerString = "";
+                foreach (string col in onFields)
+                {
+                    onInnerString += $" {col}";
+                }
+
+
+
+                //Create and select query
+                string query = $"SELECT {parseFields} FROM {table1} INNER JOIN {table2} ON {onInnerString} WHERE {parseWhere} ";
+                //instantiate the SQL command
+                com = new SqlCommand(query, con);
+
+                //execute (READER) the query
+                SqlDataReader dr = com.ExecuteReader();
+                //parse the dataReader
+
+                //Is there any Records/Rows from SELECT
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        //Create a List<object> for each Record
+                        List<object> row = new List<object>();
+
+                        //Read every column of each of the rows 
+                        for (int i = 0; i < dr.FieldCount; i++)
+                        {
+                            row.Add(dr.GetValue(i));
+                        }
+                        //ADD this list to the res collection 
+
+                        res.Add(row);
+
+
+                    }
+                }
+                else
+                {
+                    BD.ERROR = "EMPTY TABLE, THERE IS NO ROWS IN THE RESULT ON INNER JOIN QUERY";
+                }
+            }
+            catch (SqlException mysqlex)
+            {
+                BD.ERROR = $"SQL ERROR WHILE READING TABLES: {table1} , {table2}. {mysqlex.Message}";
+            }
+            catch (IOException ioex)
+            {
+                BD.ERROR = $"ERROR OF COMIUNICATION WHILE READING TABLES: {table1} , {table2}. {ioex.Message}";
+            }
+            catch (Exception ex)
+            {
+                BD.ERROR = $"GENERAL ERROR OF READING TABLES: {table1} , {table2}. {ex.Message}";
+            }
+            finally
+            {
+                //Closes Connection 
+                this.Disconnect();
+            }
+
+            //return the Records
+            return res;
         }
 
         public override bool Update(string table, List<DataCollection> data, int id)

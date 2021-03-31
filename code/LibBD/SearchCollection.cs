@@ -9,7 +9,18 @@
         public LogicOperator LogicOp { get; set; }
 
 
+        public SearchCollection(string name, CriteriaOperator CompOp, object value,bool varchar,LogicOperator LogOp) 
+        {
+            this.Name = name;
+            this.Operator = CompOp;
+            this.IsVarchar = varchar;
+            this.LogicOp = LogOp;
 
+            if (IsVarchar)
+                this.Value = $"'{value}'";
+            else
+                this.Value = value;
+        }
 
         public string ParseOperator(CriteriaOperator op) 
         {
@@ -49,7 +60,7 @@
 
 
                 default:
-                    res = "LIKE";
+                    res = "";
                     break;
             }
             return res;
@@ -66,10 +77,10 @@
             switch (op)
             {
                 case LogicOperator.OR:
-                    res = "OR";
+                    res = "OR ";
                     break;
                 case LogicOperator.AND:
-                    res = "AND";
+                    res = "AND ";
                     break;
                 case LogicOperator.NOTHING:
                     res = "";
