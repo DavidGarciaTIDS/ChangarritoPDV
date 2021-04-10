@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Data;
 using System.IO;
 
 namespace LibBD
 {
-    public class SqlServer : BD
+    public class MySql : BD
     {
-        //Attributes of SQLServer
+        //Attributes of MySQL
 
-        SqlConnection con;
-        SqlCommand com;
-        //SqlDataReader dr;
+        MySqlConnection con;
+        MySqlCommand com;
+        //MySqlDataReader dr;
 
         //ConectionString
         string connectionString;
 
         //Constructor
-        public SqlServer(string server, string db, string user, string pwd, string port="1433") 
+        public MySql(string server, string db, string user, string pwd, string port = "3306")
         {
             //initialize attributes
             this.SERVER = server;
@@ -30,10 +30,12 @@ namespace LibBD
             this.PASSW = pwd;
             this.PORT = port;
 
-            //
-            this.connectionString = $"Server={this.SERVER},{this.PORT};Database={this.DBNAME};User Id={this.USER};Password={this.PASSW};";
+            //we initialize the connection string for MySQL
+            this.connectionString = $"Server={this.SERVER};Port={this.PORT};Database={this.DBNAME};Uid={this.USER};Pwd={this.PASSW};";
+            //this.connectionString = $"Server={this.SERVER},Port={this.PORT};Database={this.DBNAME};Uid={this.USER};Pwd={this.PASSW};";
+            
             //instantiate the connection
-            this.con = new SqlConnection(this.connectionString);
+            this.con = new MySqlConnection(this.connectionString);
         }
 
 
@@ -54,16 +56,15 @@ namespace LibBD
                 }
                 res = true;
             }
-            catch (SqlException Sqlex) 
+            catch (MySqlException MySqlex)
             {
-                BD.ERROR = "SQL Error while opening Sql Server Connection " + Sqlex;
+                BD.ERROR = "MySql Error while opening MySql Server Connection " + MySqlex;
             }
 
             catch (Exception ex)
             {
-                BD.ERROR = "Error while opening Sql Server Connection " + ex;
+                BD.ERROR = "Error while opening MySql Server Connection " + ex;
             }
-
 
             return res;
         }
@@ -77,17 +78,17 @@ namespace LibBD
                 {
                     con.Close();
                 }
-                
+
                 res = true;
             }
-            catch (SqlException Sqlex)
+            catch (MySqlException MySqlex)
             {
-                BD.ERROR = "SQL Error while closing Sql Server Connection " + Sqlex;
+                BD.ERROR = "MySql Error while closing MySql Server Connection " + MySqlex;
             }
 
             catch (Exception ex)
             {
-                BD.ERROR = "Error while closing Sql Server Connection " + ex;
+                BD.ERROR = "Error while closing MySql Server Connection " + ex;
             }
 
 
@@ -101,7 +102,7 @@ namespace LibBD
 
             try
             {
-                //Connect to SQL DB
+                //Connect to MySql DB
                 this.Connect();
 
                 //Initialize the Query text
@@ -126,7 +127,7 @@ namespace LibBD
                 query += " );";
 
                 //Establish and execute the connection
-                com = new SqlCommand(query, con);
+                com = new MySqlCommand(query, con);
                 int rows = com.ExecuteNonQuery();
 
                 if (rows == 1) res = true;
@@ -134,9 +135,9 @@ namespace LibBD
                 else BD.ERROR = "ERROR UNKWOWN MALFUCTION INSERT QUERY";
 
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE INSERT QUERY. {mysqlex.Message}";
+                BD.ERROR = $"MySQL ERROR WHILE INSERT QUERY. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {
@@ -155,8 +156,6 @@ namespace LibBD
             return res;
         }
 
-       //SELECT * FROM table WHERE 1 ORDER BY field ASC/DESC
-
         public override List<List<DataCollection>> Index(string table, OrderBy order)
         {
             // returns a dynamic list of RECORDS/ROWS, each of there are List<object>
@@ -167,11 +166,11 @@ namespace LibBD
                 this.Connect();
                 //Create and select query
                 string query = $"SELECT * FROM {table} WHERE 1 ORDER BY {order.Name} {order.OrderCriteria}";
-                //instantiate the SQL command
-                com = new SqlCommand(query, con);
+                //instantiate the MySql command
+                com = new MySqlCommand(query, con);
 
                 //execute (READER) the query
-                SqlDataReader dr = com.ExecuteReader();
+                MySqlDataReader dr = com.ExecuteReader();
                 //parse the dataReader
 
                 //Is there any Records/Rows from SELECT
@@ -179,31 +178,32 @@ namespace LibBD
                 {
                     while (dr.Read())
                     {
-                        //Create a List<object> for each Record
-                        List<DataCollection> row = new List<DataCollection>();
-                        DataCollection item;
+                        //Create a List<DataCollection> for each Record
+                        //List<object> row = new List<object>();
+                        List<DataCollection> data = new List<DataCollection>();
+
+                        Console.WriteLine(dr.FieldCount);
                         //Read every column of each of the rows 
                         for (int i = 0; i < dr.FieldCount; i++)
                         {
-                            item = new DataCollection(dr.GetName(i), Types.VARCHAR, dr.GetValue(i));
+                            DataCollection item = new DataCollection(dr.GetName(i),Types.VARCHAR,dr.GetValue(i));
                             item.ThisFieldType(dr.GetDataTypeName(i));
-                            row.Add(item);
+                            data.Add(item);
+                            //row.Add(dr.GetValue(i));
+                            
                         }
                         //ADD this list to the res collection 
-
-                        res.Add(row);
-
-
+                        res.Add(data);
                     }
                 }
-                else 
+                else
                 {
                     BD.ERROR = "EMPTY TABLE, THERE IS NO ROWS IN THE RESULT";
                 }
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE READING TABLE: -{table}- index. {mysqlex.Message}";
+                BD.ERROR = $"MySql ERROR WHILE READING TABLE: -{table}- index. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {
@@ -232,14 +232,14 @@ namespace LibBD
                 //Connect
                 this.Connect();
                 //Parse the fields collections
-                string parseFields="";
+                string parseFields = "";
                 foreach (string col in fields)
                 {
                     parseFields += $"{col},";
                 }
 
                 //remove last comma
-                parseFields = parseFields.Remove(parseFields.Length-1);
+                parseFields = parseFields.Remove(parseFields.Length - 1);
 
                 //parse search collection
                 string parseWhere = "";
@@ -251,11 +251,11 @@ namespace LibBD
 
                 //Create and select query
                 string query = $"SELECT {parseFields} FROM {table} WHERE {parseWhere} ";
-                //instantiate the SQL command
-                com = new SqlCommand(query, con);
+                //instantiate the MySql command
+                com = new MySqlCommand(query, con);
 
                 //execute (READER) the query
-                SqlDataReader dr = com.ExecuteReader();
+                MySqlDataReader dr = com.ExecuteReader();
                 //parse the dataReader
 
                 //Is there any Records/Rows from SELECT
@@ -269,7 +269,7 @@ namespace LibBD
                         //Read every column of each of the rows 
                         for (int i = 0; i < dr.FieldCount; i++)
                         {
-                            item = new DataCollection(dr.GetName(i), Types.VARCHAR, dr.GetValue(i));
+                            item = new DataCollection(dr.GetName(i),Types.VARCHAR,dr.GetValue(i));
                             item.ThisFieldType(dr.GetDataTypeName(i));
                             row.Add(item);
                         }
@@ -285,9 +285,9 @@ namespace LibBD
                     BD.ERROR = "EMPTY TABLE, THERE IS NO ROWS IN THE RESULT";
                 }
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE READING TABLE: {table}. {mysqlex.Message}";
+                BD.ERROR = $"MySql ERROR WHILE READING TABLE: {table}. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {
@@ -304,14 +304,12 @@ namespace LibBD
             }
 
             //return the Records
+            Console.WriteLine(res);
             return res;
         }
 
         public override List<List<DataCollection>> Read(List<string> fields, string table1, string table2, List<string> onFields, List<SearchCollection> search)
         {
-<<<<<<< Updated upstream
-            throw new NotImplementedException();
-=======
 
             // returns a dynamic list of RECORDS/ROWS, each of there are List<object>
             List<List<DataCollection>> res = new List<List<DataCollection>>();
@@ -336,9 +334,9 @@ namespace LibBD
                 {
                     parseWhere += $"{criteria.Name} {criteria.ParseOperator(criteria.Operator)} {criteria.Value} {criteria.ParseLogicOperator(criteria.LogicOp)}";
                 }
-               
+
                 //Parse the onQuery
-                
+
                 //the Onstring
                 string onInnerString = "";
                 foreach (string col in onFields)
@@ -350,11 +348,11 @@ namespace LibBD
 
                 //Create and select query
                 string query = $"SELECT {parseFields} FROM {table1} INNER JOIN {table2} ON {onInnerString} WHERE {parseWhere} ";
-                //instantiate the SQL command
-                com = new SqlCommand(query, con);
+                //instantiate the MySql command
+                com = new MySqlCommand(query, con);
 
                 //execute (READER) the query
-                SqlDataReader dr = com.ExecuteReader();
+                MySqlDataReader dr = com.ExecuteReader();
                 //parse the dataReader
 
                 //Is there any Records/Rows from SELECT
@@ -384,9 +382,9 @@ namespace LibBD
                     BD.ERROR = "EMPTY TABLE, THERE IS NO ROWS IN THE RESULT ON INNER JOIN QUERY";
                 }
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE READING TABLES: {table1} , {table2}. {mysqlex.Message}";
+                BD.ERROR = $"MySql ERROR WHILE READING TABLES: {table1} , {table2}. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {
@@ -404,7 +402,6 @@ namespace LibBD
 
             //return the Records
             return res;
->>>>>>> Stashed changes
         }
 
         public override bool Update(string table, List<DataCollection> data, int id)
@@ -414,7 +411,7 @@ namespace LibBD
 
             try
             {
-                //Connect to SQL DB
+                //Connect to MySql DB
                 Connect();
 
                 //Initialize the Query text
@@ -430,7 +427,7 @@ namespace LibBD
                 query += $" WHERE id={id} ";
 
                 //Establish and execute the connection
-                com = new SqlCommand(query, con);
+                com = new MySqlCommand(query, con);
                 int rows = com.ExecuteNonQuery();
 
                 if (rows == 1) res = true;
@@ -438,9 +435,9 @@ namespace LibBD
                 else BD.ERROR = "ERROR UNKWOWN MALFUCTION UPDATE QUERY";
 
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE UPDATE QUERY. {mysqlex.Message}";
+                BD.ERROR = $"MySql ERROR WHILE UPDATE QUERY. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {
@@ -458,7 +455,7 @@ namespace LibBD
 
             return res;
         }
-        
+
         public override bool Delete(string table, int id)
         {
             bool res = false;
@@ -466,14 +463,14 @@ namespace LibBD
 
             try
             {
-                //Connect to SQL DB
+                //Connect to MySql DB
                 Connect();
 
                 //Initialize the Query text
                 query = $"DELETE FROM {table} WHERE id= {id} ";
 
                 //Establish and execute the connection
-                com = new SqlCommand(query, con);
+                com = new MySqlCommand(query, con);
                 int rows = com.ExecuteNonQuery();
 
                 if (rows == 1) res = true;
@@ -481,9 +478,9 @@ namespace LibBD
                 else BD.ERROR = "ERROR UNKWOWN MALFUCTION DELETE QUERY";
 
             }
-            catch (SqlException mysqlex)
+            catch (MySqlException mysqlex)
             {
-                BD.ERROR = $"SQL ERROR WHILE DELETE QUERY. {mysqlex.Message}";
+                BD.ERROR = $"MySql ERROR WHILE DELETE QUERY. {mysqlex.Message}";
             }
             catch (IOException ioex)
             {

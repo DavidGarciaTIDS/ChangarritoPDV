@@ -61,6 +61,36 @@ namespace LibBD
                     this.FieldType == Types.TIME );
         }
 
+        public void ThisFieldType(string type) 
+        {
+            type = type.ToLower();
+            switch (type)
+            {
+                case "varchar":
+                    this.FieldType = Types.VARCHAR;
+                    break;
+                case "text":
+                    this.FieldType = Types.TEXT;
+                    break;
+                case "int":
+                    this.FieldType = Types.INT;
+                    break;
+                case "double":
+                    this.FieldType = Types.DOUBLE;
+                    break;
+                case "datetime":
+                    this.FieldType = Types.DATETIME;
+                    break;
+                case "time":
+                    this.FieldType = Types.TIME;
+                    break;
+
+                default:
+                    this.FieldType = Types.VARCHAR;
+                    break;
+            }
+
+        }
 
     }
 }

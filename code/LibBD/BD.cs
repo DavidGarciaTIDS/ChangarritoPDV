@@ -54,7 +54,7 @@ namespace LibBD
         /// <param name="table">Selected table</param>
         /// <param name="search">The search criteria and their logic</param>
         /// <returns>a list of objects that will be represent a row each on of them , and every one is List<Object></returns>
-        public abstract List<List<Object>> Read(List<string> fields, string table, List<SearchCollection> search);
+        public abstract List<List<DataCollection>> Read(List<string> fields, string table, List<SearchCollection> search);
         /// <summary>
         /// Selects an inner join between two tables 
         /// </summary>
@@ -64,14 +64,14 @@ namespace LibBD
         /// <param name="onFields">the field conditionals the will allow o generate and intersection</param>
         /// <param name="search">the field conditionals the will allow o generate and intersection</param>
         /// <returns></returns>
-        public abstract List<List<Object>> Read(List<string> fields, string table1, string table2, List<string> onFields, List<SearchCollection> search);
+        public abstract List<List<DataCollection>> Read(List<string> fields, string table1, string table2, List<string> onFields, List<SearchCollection> search);
         /// <summary>
         /// Retrieves the complete row set of a table, order by the field in the input parameters
         /// </summary>
         /// <param name="table">Table from which the data will be retrieved</param>
         /// <param name="order">the field to be order by (ASC, DESC)</param>
         /// <returns>a list of objects that will be represent a row each on of them , and every one is List<Object></returns>
-        public abstract List<List<Object>> Index(string table, OrderBy order);
+        public abstract List<List<DataCollection>> Index(string table, OrderBy order);
         /// <summary>
         /// Opens the connection to the SERVER established by the connectionString
         /// </summary>
